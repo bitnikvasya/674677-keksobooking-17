@@ -20,24 +20,29 @@ var getRandomNumber = function (min, max) {
 };
 
 // Массив с объектами
-var generateAds = function () {
-  var ads = [];
+var ads = [];
 
+var generateAds = function () {
   for (var i = 0; i < ADS_AMOUNT; i++) {
-  ads[i] = {
-    'author': {
+    ads[i] = {
+      'author': {
         'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
-    'offer': {
+      'offer': {
         'type': OFFER_TYPE[getRandomArray(OFFER_TYPE)]
       },
-    'location': {
+      'location': {
         'x': getRandomNumber(0, 1200),
         'y': getRandomNumber(130, 630)
       }
-  };
+    };
+  }
 
-  return ads;
+  return ads[i];
+};
+
+for (var j = 0; j < ADS_AMOUNT; j++) {
+  ads.push(generateAds());
 }
 
 var renderPin = function (pin) {
