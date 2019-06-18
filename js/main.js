@@ -41,15 +41,16 @@ var generateAds = function () {
   return adArray;
 };
 
+var ads = generateAds();
+
 var renderPin = function () {
   var pinElement = similarPinsTemplate.cloneNode(true);
-  pinElement.style.cssText = 'left: ' + (generateAds[i].location.x - 25) + 'px; top: ' + (generateAds[i].location.y - 70) + 'px;';
-  pinElement.querySelector('img').src = generateAds[i].author.avatar;
-  pinElement.querySelector('img').alt = generateAds[i].offer.type;
+  pinElement.style.cssText = 'left: ' + (ads[i].location.x - 25) + 'px; top: ' + (ads[i].location.y - 70) + 'px;';
+  pinElement.querySelector('img').src = ads[i].author.avatar;
+  pinElement.querySelector('img').alt = ads[i].offer.type;
   return pinElement;
 };
 
-var ads = generateAds();
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < ads.length; i++) {
   fragment.appendChild(renderPin(ads[i]));
