@@ -21,10 +21,10 @@ var getRandomElement = function (array) {
 
 // Массив с объектами
 var generateAds = function () {
-  var ads = [];
+  var adArray = [];
 
   for (var i = 0; i < ADS_AMOUNT; i++) {
-    ads[i] = {
+    adArray[i] = {
       'author': {
         'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
@@ -38,7 +38,7 @@ var generateAds = function () {
     };
   }
 
-  return ads;
+  return adArray;
 };
 
 var renderPin = function () {
@@ -49,9 +49,10 @@ var renderPin = function () {
   return pinElement;
 };
 
+var ads = generateAds();
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < generateAds.length; i++) {
-  fragment.appendChild(renderPin(generateAds[i]));
+for (var i = 0; i < ads.length; i++) {
+  fragment.appendChild(renderPin(ads[i]));
 }
 
 similarListElement.appendChild(fragment);
