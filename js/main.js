@@ -4,7 +4,6 @@ var ADS_AMOUNT = 8;
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 var similarListElement = map.querySelector('.map__pins');
 var similarPinsTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -56,4 +55,38 @@ for (var i = 0; i < ads.length; i++) {
   fragment.appendChild(renderPin(ads[i]));
 }
 
-similarListElement.appendChild(fragment);
+var adForm = document.querySelector('.ad-form');
+var fieldset = adForm.querySelectorAll('fieldset');
+
+var setAttributeDisabled = function (arr) {
+  for (var k = 0; k < arr.length; k++) {
+    arr[k].setAttribute('disabled', 'disabled');
+  }
+};
+
+setAttributeDisabled(fieldset);
+
+var removeAttributeDisabled = function (arr) {
+  for (var k = 0; k < arr.length; k++) {
+    arr[k].removeAttribute('disabled', 'disabled');
+  }
+};
+
+var MAP_PIN_MAIN_HEIGHT = 88;
+
+var mapPinMain = document.querySelector('.map__pin--main');
+
+var address = adForm.querySelector('#address');
+var mapPinMainPosition = mapPinMain.offsetLeft + ', ' + mapPinMain.offsetTop;
+var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT);
+
+address.setAttribute('value', mapPinMainPosition);
+
+mapPinMain.addEventListener('click', function () {
+  removeAttributeDisabled(fieldset);
+  map.classList.remove('map--faded');
+  similarListElement.appendChild(fragment);
+  adForm.classList.remove('ad-form--disabled');
+  address.removeAttribute('value', mapPinMainPosition);
+  address.setAttribute('value', mapPinMainActivePosition);
+});
