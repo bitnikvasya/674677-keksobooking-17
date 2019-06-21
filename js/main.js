@@ -1,6 +1,7 @@
 'use strict';
 
 var ADS_AMOUNT = 8;
+var MAP_PIN_MAIN_HEIGHT = 88;
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 
 var map = document.querySelector('.map');
@@ -72,21 +73,22 @@ var removeAttributeDisabled = function (arr) {
   }
 };
 
-var MAP_PIN_MAIN_HEIGHT = 88;
-
 var mapPinMain = document.querySelector('.map__pin--main');
 
 var address = adForm.querySelector('#address');
 var mapPinMainPosition = mapPinMain.offsetLeft + ', ' + mapPinMain.offsetTop;
-var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT);
+var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT - 35);
 
 address.setAttribute('value', mapPinMainPosition);
 
-mapPinMain.addEventListener('click', function () {
+var onMapPinMainClick = function () {
   removeAttributeDisabled(fieldset);
   map.classList.remove('map--faded');
   similarListElement.appendChild(fragment);
   adForm.classList.remove('ad-form--disabled');
   address.removeAttribute('value', mapPinMainPosition);
   address.setAttribute('value', mapPinMainActivePosition);
-});
+  mapPinMain.removeEventListener('click', onMapPinMainClick);
+};
+
+mapPinMain.addEventListener('click', onMapPinMainClick);
