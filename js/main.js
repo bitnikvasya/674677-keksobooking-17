@@ -92,3 +92,34 @@ var onMapPinMainClick = function () {
 };
 
 mapPinMain.addEventListener('click', onMapPinMainClick);
+
+var offers = {
+  palace: 10000,
+  flat: 1000,
+  house: 5000,
+  bungalo: 0
+};
+
+var offerType = document.querySelector('#type');
+var offerPrice = document.querySelector('#price');
+
+var onOfferType = function () {
+  offerPrice.min = offers[offerType.value];
+  offerPrice.placeholder = offers[offerType.value];
+};
+
+offerType.addEventListener('change', onOfferType);
+
+var timeIn = document.querySelector('#timein');
+var timeOut = document.querySelector('#timeout');
+
+var onTimeIn = function () {
+  timeOut.value = timeIn.value;
+};
+
+var onTimeOut = function () {
+  timeIn.value = timeOut.value;
+};
+
+timeIn.addEventListener('change', onTimeIn);
+timeOut.addEventListener('change', onTimeOut);
