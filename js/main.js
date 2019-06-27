@@ -3,6 +3,14 @@
 var ADS_AMOUNT = 8;
 var MAP_PIN_MAIN_HEIGHT = 88;
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var OFFERS = {
+  palace: 10000,
+  flat: 1000,
+  house: 5000,
+  bungalo: 0
+};
+var MAP_PIN_MAIN_Y_MIN = 130;
+var MAP_PIN_MAIN_Y_MAX = 630;
 
 var map = document.querySelector('.map');
 
@@ -91,21 +99,12 @@ var onMapPinMainClick = function () {
   mapPinMain.removeEventListener('click', onMapPinMainClick);
 };
 
-mapPinMain.addEventListener('click', onMapPinMainClick);
-
-var offers = {
-  palace: 10000,
-  flat: 1000,
-  house: 5000,
-  bungalo: 0
-};
-
 var offerType = document.querySelector('#type');
 var offerPrice = document.querySelector('#price');
 
 var onOfferType = function () {
-  offerPrice.min = offers[offerType.value];
-  offerPrice.placeholder = offers[offerType.value];
+  offerPrice.min = OFFERS[offerType.value];
+  offerPrice.placeholder = OFFERS[offerType.value];
 };
 
 offerType.addEventListener('change', onOfferType);
@@ -123,3 +122,52 @@ var onTimeOut = function () {
 
 timeIn.addEventListener('change', onTimeIn);
 timeOut.addEventListener('change', onTimeOut);
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onPinMainMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+
+    if ((mapPinMain.offsetTop - shift.y) < MAP_PIN_MAIN_Y_MIN) {
+      mapPinMain.style.top = 130 + 'px';
+    }
+
+    if ((mapPinMain.offsetTop - shift.y) > MAP_PIN_MAIN_Y_MAX) {
+      mapPinMain.style.top = 630 + 'px';
+    }
+
+
+  };
+
+  var onPinMainMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    onMapPinMainClick();
+
+    document.removeEventListener('mousemove', onPinMainMouseMove);
+    document.removeEventListener('mouseup', onPinMainMouseUp);
+  };
+
+  address.removeAttribute('value', mapPinMainPosition);
+  address.setAttribute('value', mapPinMainActivePosition);
+
+  document.addEventListener('mousemove', onPinMainMouseMove);
+  document.addEventListener('mouseup', onPinMainMouseUp);
+});
