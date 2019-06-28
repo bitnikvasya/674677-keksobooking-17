@@ -84,18 +84,19 @@ var removeAttributeDisabled = function (arr) {
 var mapPinMain = document.querySelector('.map__pin--main');
 
 var address = adForm.querySelector('#address');
-var mapPinMainPosition = mapPinMain.offsetLeft + ', ' + mapPinMain.offsetTop;
-var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT - 35);
-
-address.setAttribute('value', mapPinMainPosition);
+var mapPinMainStartPosition = mapPinMain.offsetLeft + ', ' + mapPinMain.offsetTop;
+var mapPinMainPosition = function () {
+  var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT - 35);
+  address.setAttribute('value', mapPinMainActivePosition);
+};
+address.setAttribute('value', mapPinMainStartPosition);
 
 var onMapPinMainClick = function () {
   removeAttributeDisabled(fieldset);
   map.classList.remove('map--faded');
   similarListElement.appendChild(fragment);
   adForm.classList.remove('ad-form--disabled');
-  address.removeAttribute('value', mapPinMainPosition);
-  address.setAttribute('value', mapPinMainActivePosition);
+  mapPinMainPosition();
   mapPinMain.removeEventListener('click', onMapPinMainClick);
 };
 
@@ -164,9 +165,6 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mousemove', onPinMainMouseMove);
     document.removeEventListener('mouseup', onPinMainMouseUp);
   };
-
-  address.removeAttribute('value', mapPinMainPosition);
-  address.setAttribute('value', mapPinMainActivePosition);
 
   document.addEventListener('mousemove', onPinMainMouseMove);
   document.addEventListener('mouseup', onPinMainMouseUp);
