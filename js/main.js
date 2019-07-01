@@ -2,6 +2,8 @@
 
 var ADS_AMOUNT = 8;
 var MAP_PIN_MAIN_HEIGHT = 88;
+var MAP_PIN_MAIN_WIDTH = 70;
+var MAP_PIN_WIDTH = 50;
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var OFFERS = {
   palace: 10000,
@@ -9,8 +11,10 @@ var OFFERS = {
   house: 5000,
   bungalo: 0
 };
-var MAP_PIN_MAIN_Y_MIN = 130;
-var MAP_PIN_MAIN_Y_MAX = 630;
+var MAP_PIN_X_MIN = 0;
+var MAP_PIN_X_MAX = 1200;
+var MAP_PIN_Y_MIN = 130;
+var MAP_PIN_Y_MAX = 630;
 
 var map = document.querySelector('.map');
 
@@ -40,8 +44,8 @@ var generateAds = function () {
         'type': getRandomElement(OFFER_TYPE)
       },
       'location': {
-        'x': getRandomNumber(0, 1200),
-        'y': getRandomNumber(130, 630)
+        'x': getRandomNumber(MAP_PIN_X_MIN, MAP_PIN_X_MAX),
+        'y': getRandomNumber(MAP_PIN_Y_MIN, MAP_PIN_Y_MAX)
       }
     };
   }
@@ -53,7 +57,7 @@ var ads = generateAds();
 
 var renderPin = function () {
   var pinElement = similarPinsTemplate.cloneNode(true);
-  pinElement.style.cssText = 'left: ' + (ads[i].location.x - 25) + 'px; top: ' + (ads[i].location.y - 70) + 'px;';
+  pinElement.style.cssText = 'left: ' + (ads[i].location.x - MAP_PIN_WIDTH / 2) + 'px; top: ' + ads[i].location.y + 'px;';
   pinElement.querySelector('img').src = ads[i].author.avatar;
   pinElement.querySelector('img').alt = ads[i].offer.type;
   return pinElement;
@@ -84,19 +88,19 @@ var removeAttributeDisabled = function (arr) {
 var mapPinMain = document.querySelector('.map__pin--main');
 
 var address = adForm.querySelector('#address');
-var mapPinMainStartPosition = mapPinMain.offsetLeft + ', ' + mapPinMain.offsetTop;
-var mapPinMainPosition = function () {
-  var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT - 35);
+
+var setPinMainPosition = function () {
+  var mapPinMainActivePosition = mapPinMain.offsetLeft + ', ' + (mapPinMain.offsetTop + MAP_PIN_MAIN_HEIGHT - MAP_PIN_MAIN_WIDTH / 2);
   address.setAttribute('value', mapPinMainActivePosition);
 };
-address.setAttribute('value', mapPinMainStartPosition);
+
 
 var onMapPinMainClick = function () {
   removeAttributeDisabled(fieldset);
   map.classList.remove('map--faded');
   similarListElement.appendChild(fragment);
   adForm.classList.remove('ad-form--disabled');
-  mapPinMainPosition();
+  setPinMainPosition();
   mapPinMain.removeEventListener('click', onMapPinMainClick);
 };
 
@@ -104,8 +108,10 @@ var offerType = document.querySelector('#type');
 var offerPrice = document.querySelector('#price');
 
 var onOfferType = function () {
-  offerPrice.min = OFFERS[offerType.value];
-  offerPrice.placeholder = OFFERS[offerType.value];
+  var offerTypeValue = OFFERS[offerType.value];
+
+  offerPrice.min = offerTypeValue;
+  offerPrice.placeholder = offerTypeValue;
 };
 
 offerType.addEventListener('change', onOfferType);
@@ -144,17 +150,36 @@ mapPinMain.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    var getYPosition = function () {
+      var yPosition = mapPinMain.offsetTop - shift.y;
 
-    if ((mapPinMain.offsetTop - shift.y) < MAP_PIN_MAIN_Y_MIN) {
-      mapPinMain.style.top = 130 + 'px';
-    }
+      if (yPosition < MAP_PIN_Y_MIN) {
+        yPosition = MAP_PIN_Y_MIN;
+      }
 
-    if ((mapPinMain.offsetTop - shift.y) > MAP_PIN_MAIN_Y_MAX) {
-      mapPinMain.style.top = 630 + 'px';
-    }
+      if (yPosition > MAP_PIN_Y_MAX) {
+        yPosition = MAP_PIN_Y_MAX;
+      }
 
+      return yPosition;
+    };
+
+    var getXPosition = function () {
+      var xPosition = mapPinMain.offsetLeft - shift.x;
+
+      if (xPosition < MAP_PIN_X_MIN) {
+        xPosition = MAP_PIN_X_MIN;
+      }
+
+      if (xPosition > MAP_PIN_X_MAX - MAP_PIN_MAIN_WIDTH) {
+        xPosition = MAP_PIN_X_MAX - MAP_PIN_MAIN_WIDTH;
+      }
+
+      return xPosition;
+    };
+
+    mapPinMain.style.top = getYPosition() + 'px';
+    mapPinMain.style.left = getXPosition() + 'px';
 
   };
 
