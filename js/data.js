@@ -2,39 +2,34 @@
 
 (function () {
 
-  var MAP_PIN_MAIN_HEIGHT = 88;
-  var MAP_PIN_MAIN_WIDTH = 70;
-  var MAP_PIN_WIDTH = 50;
-  var MAP_PIN_X_MIN = 0;
-  var MAP_PIN_X_MAX = 1200;
-  var MAP_PIN_Y_MIN = 130;
-  var MAP_PIN_Y_MAX = 630;
+  var ADS_AMOUNT = 8;
+  var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 
-  var mapPinMain = document.querySelector('.map__pin--main');
-  var fragment = document.createDocumentFragment();
+  var generateAds = function () {
+    var adArray = [];
 
-  // Случайное число от min до max
-  var getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+    for (var i = 0; i < ADS_AMOUNT; i++) {
+      adArray[i] = {
+        'author': {
+          'avatar': 'img/avatars/user0' + (i + 1) + '.png'
+        },
+        'offer': {
+          'type': window.util.getRandomElement(OFFER_TYPE)
+        },
+        'location': {
+          'x': window.util.getRandomNumber(window.util.MAP_PIN_X_MIN, window.util.MAP_PIN_X_MAX),
+          'y': window.util.getRandomNumber(window.util.MAP_PIN_Y_MIN, window.util.MAP_PIN_Y_MAX)
+        }
+      };
+    }
+
+    return adArray;
   };
 
-  // Случайное число от 0 до длины массива
-  var getRandomElement = function (array) {
-    return array[getRandomNumber(0, array.length)];
-  };
+  var ads = generateAds();
 
-  window.util = {
-    MAP_PIN_MAIN_HEIGHT: MAP_PIN_MAIN_HEIGHT,
-    MAP_PIN_MAIN_WIDTH: MAP_PIN_MAIN_WIDTH,
-    MAP_PIN_WIDTH: MAP_PIN_WIDTH,
-    MAP_PIN_X_MIN: MAP_PIN_X_MIN,
-    MAP_PIN_X_MAX: MAP_PIN_X_MAX,
-    MAP_PIN_Y_MIN: MAP_PIN_Y_MIN,
-    MAP_PIN_Y_MAX: MAP_PIN_Y_MAX,
-    mapPinMain: mapPinMain,
-    fragment: fragment,
-    getRandomNumber: getRandomNumber,
-    getRandomElement: getRandomElement
+  window.data = {
+    ads: ads
   };
 
 })();
