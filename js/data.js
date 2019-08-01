@@ -3,7 +3,7 @@
 (function () {
 
   var ADS_AMOUNT = 8;
-  var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+  var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 
   var generateAds = function () {
     var adArray = [];
@@ -14,7 +14,7 @@
           'avatar': 'img/avatars/user0' + (i + 1) + '.png'
         },
         'offer': {
-          'type': window.util.getRandomElement(OFFER_TYPE)
+          'type': window.util.getRandomElement(OFFER_TYPES)
         },
         'location': {
           'x': window.util.getRandomNumber(window.util.MAP_PIN_X_MIN, window.util.MAP_PIN_X_MAX),
